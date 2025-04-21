@@ -1,0 +1,61 @@
+//
+//  HomeView.swift
+//  HaHor
+//
+//  Created by bell on 21/4/2568 BE.
+//
+
+import SwiftUI
+
+struct HomeView: View {
+    @State private var selectedTab = 0
+    
+    @State private var showSignInView: Bool = false
+    
+    var body: some View {
+        ZStack{
+            NavigationStack{
+                VStack (spacing: 0){
+                    HeaderView(title: headerTitle(for: selectedTab))
+                    
+                    Group {
+                        switch selectedTab {
+                        case 0:
+                            MapView()
+                        case 1:
+                            SortView()
+                        case 2:
+                            UserView(showSignInView: $showSignInView)
+                        default:
+                            EmptyView()
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    BottomNavBarView(selectedTab: $selectedTab)
+                }
+                //                .edgesIgnoringSafeArea(.bottom)
+            }
+        }.onAppear{
+            let authUser = try? AuthnticationManager.shared.getAuthenticatedUser()
+            self.showSignInView = authUser == nil ? true : false
+        }
+        .fullScreenCover(isPresented: $showSignInView){
+            NavigationStack{
+                AuthenticationView(showSignInView: $showSignInView)
+            }
+        }
+        
+    }
+    func headerTitle(for index: Int) -> String {
+        switch index {
+        case 0: return "Find Match Dorm"
+        case 1: return "Sort Options"
+        case 2: return "User Profile"
+        default: return ""
+        }
+    }
+}
+
+#Preview {
+    HomeView()
+}
