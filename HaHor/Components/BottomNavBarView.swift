@@ -22,7 +22,7 @@ struct BottomNavBarView: View {
         }
         .padding(.top, 10)
         .padding(.bottom, 30)
-        .background(Color(red: 177/255, green: 238/255, blue: 61/255)) // Light green
+        .background(Color(red: 177/255, green: 239/255, blue: 61/255)) // Light green
         //        .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
         //        .shadow(radius: 4)
     }

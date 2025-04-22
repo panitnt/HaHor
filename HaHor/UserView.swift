@@ -14,6 +14,8 @@ final class SettingsViewModel: ObservableObject{
     }
 }
 
+
+
 struct UserView: View {
     
     @StateObject private var viewModel = SettingsViewModel()
@@ -29,20 +31,21 @@ struct UserView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     
                     // Profile Section
-                    HStack(alignment: .center, spacing: 16) {
-                        Image(systemName: "person.circle")
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(.black)
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("I Love KU 1234")
-                                .font(.headline)
-                            Text("Email@ku.th")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                    }
+//                    HStack(alignment: .center, spacing: 16) {
+//                        Image(systemName: "person.circle")
+//                            .resizable()
+//                            .frame(width: 60, height: 60)
+//                            .foregroundColor(.black)
+//                        
+//                        VStack(alignment: .leading, spacing: 4) {
+//                            Text("I Love KU 1234")
+//                                .font(.headline)
+//                            Text("Email@ku.th")
+//                                .font(.subheadline)
+//                                .foregroundColor(.gray)
+//                        }
+//                    }
+                    UserProfileView()
                     
                     Divider()
                     
