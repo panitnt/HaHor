@@ -9,24 +9,54 @@ import SwiftUI
 
 @MainActor
 final class UserProfileViewModel: ObservableObject {
+    
+    static let shared = UserProfileViewModel() // using singleton
+    
     @Published var email: String = ""
     @Published var username: String = ""
     
+    @Published private(set) var authUser: AuthDataResultModel? = nil
+    @Published private(set) var user: DBUser? = nil
+    
+    @Published var favoriteDorms: [Dorm] = []
+    @Published var isFavoriteDormsLoaded = false
+    
+    
     func loadUser() {
-        do {
-            if let user = try AuthnticationManager.shared.getAuthenticatedUser() {
-                self.email = user.email ?? "No Email"
-                self.username = user.username ?? "No Username"
+        Task {
+            do {
+                if let authDataResult = try AuthnticationManager.shared.getAuthenticatedUser() {
+                    self.authUser = authDataResult
+                    self.email = authDataResult.email ?? "No Email"
+                    self.username = authDataResult.username ?? "No Username"
+                    
+                    let userData = try await UserManager.shared.getUser(userId: authDataResult.uid)
+                    self.user = userData
+                    
+                    let favoriteIDs = userData.favorite
+                    var dorms: [Dorm] = []
+                    
+                    for id in favoriteIDs {
+                        if let dorm = try? await DormManager.shared.fetchDorm(by: id) {
+                            dorms.append(dorm)
+                        }
+                    }
+                    
+                    self.favoriteDorms = dorms
+                    self.isFavoriteDormsLoaded = true
+                    
+                }
+            } catch {
+                print("Failed to load user: \(error.localizedDescription)")
             }
-        } catch {
-            print("Failed to load user: \(error.localizedDescription)")
         }
     }
 }
 
 
 struct UserProfileView: View {
-    @StateObject private var viewModel = UserProfileViewModel()
+    //    @StateObject private var viewModel = UserProfileViewModel.shared
+    @EnvironmentObject var viewModel: UserProfileViewModel
     
     var body: some View {
         HStack(alignment: .center, spacing: 16) {

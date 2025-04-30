@@ -22,6 +22,10 @@ struct UserView: View {
     
     @Binding var showSignInView: Bool
     
+    @EnvironmentObject var userVM: UserProfileViewModel
+    
+//    @State private var favoriteDorms: [Dorm] = []
+    
     var body: some View {
         ZStack{
             Color(.systemGray6) // Light gray background
@@ -30,21 +34,6 @@ struct UserView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     
-                    // Profile Section
-//                    HStack(alignment: .center, spacing: 16) {
-//                        Image(systemName: "person.circle")
-//                            .resizable()
-//                            .frame(width: 60, height: 60)
-//                            .foregroundColor(.black)
-//                        
-//                        VStack(alignment: .leading, spacing: 4) {
-//                            Text("I Love KU 1234")
-//                                .font(.headline)
-//                            Text("Email@ku.th")
-//                                .font(.subheadline)
-//                                .foregroundColor(.gray)
-//                        }
-//                    }
                     UserProfileView()
                     
                     Divider()
@@ -55,29 +44,21 @@ struct UserView: View {
                         .bold()
                     
                     // Favorite Cards
-                    CardView(
-                        imageName: "pixels",
-                        title: "The Pixels at Kaset",
-                        rating: "5.0 (2)",
-                        priceRange: "6,000 - 8,000",
-                        isFavorite: true
-                    )
-                    
-                    CardView(
-                        imageName: "chapter",
-                        title: "Chapter One The Campus Kaset",
-                        rating: "4.9 (23)",
-                        priceRange: "9,000 - 12,000",
-                        isFavorite: true
-                    )
-                    
-                    CardView(
-                        imageName: "chapter",
-                        title: "Chapter One The Campus Kaset",
-                        rating: "4.9 (23)",
-                        priceRange: "9,000 - 12,000",
-                        isFavorite: true
-                    )
+                    if userVM.favoriteDorms.isEmpty {
+                        Text("No favorites found.")
+                            .foregroundColor(.gray)
+                    } else {
+                        ForEach(userVM.favoriteDorms, id: \.id) { dorm in
+                            CardView(
+                                imageName: "dorm_placeholder", // Replace with real image logic
+                                title: dorm.name,
+                                rating: dorm.avg_review,
+                                priceRange: dorm.price,
+                                isFavorite: true
+                            )
+                        }
+                    }
+
                     
                     Divider()
                     
@@ -99,6 +80,20 @@ struct UserView: View {
                     }
                 }
                 .padding()
+//                .onAppear {
+//                    Task {
+//                        if let favoriteIDs = userVM.user?.favorite {
+//                            var dorms: [Dorm] = []
+//                            for id in favoriteIDs {
+//                                if let dorm = try? await DormManager.shared.fetchDorm(by: id) {
+//                                    dorms.append(dorm)
+//                                }
+//                            }
+//                            favoriteDorms = dorms
+//                        }
+//                    }
+//                }
+
             } // end scrollView
         }
     }

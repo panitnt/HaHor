@@ -12,6 +12,8 @@ struct HomeView: View {
     
     @State private var showSignInView: Bool = false
     
+    @StateObject private var viewModel = UserProfileViewModel.shared
+    
     var body: some View {
         ZStack{
             NavigationStack{
@@ -35,15 +37,25 @@ struct HomeView: View {
                 }
                 //                .edgesIgnoringSafeArea(.bottom)
             }
-        }.onAppear{
-            let authUser = try? AuthnticationManager.shared.getAuthenticatedUser()
-            self.showSignInView = authUser == nil ? true : false
+        }.onAppear {
+            Task {
+                let authUser = try? AuthnticationManager.shared.getAuthenticatedUser()
+                self.showSignInView = authUser == nil
+                
+                
+                // ✅ Load user and favorites once here
+                if !viewModel.isFavoriteDormsLoaded {
+                    viewModel.loadUser()
+                }
+            }
         }
         .fullScreenCover(isPresented: $showSignInView){
             NavigationStack{
                 AuthenticationView(showSignInView: $showSignInView)
             }
         }
+        .environmentObject(viewModel) // inject to all child views
+//        .environmentObject(UserProfileViewModel.shared)
         
     }
     func headerTitle(for index: Int) -> String {

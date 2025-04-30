@@ -18,6 +18,7 @@ final class SignInEmailViewModel: ObservableObject {
             throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Please fill all the fields."])
         }
         let _ = try await AuthnticationManager.shared.signInUser(email: email, password: password)
+        UserProfileViewModel.shared.loadUser() 
     }
 }
 
