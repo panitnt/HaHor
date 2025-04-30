@@ -20,6 +20,23 @@ final class UserProfileViewModel: ObservableObject {
     
     @Published var favoriteDorms: [Dorm] = []
     @Published var isFavoriteDormsLoaded = false
+    @Published var dorms: [Dorm] = []
+    @Published var isDormLoading = false
+    @Published var dormLoadError: String?
+
+    func fetchDormsIfNeeded() async {
+        if dorms.isEmpty {
+            isDormLoading = true
+            dormLoadError = nil
+            do {
+                dorms = try await DormManager.shared.fetchAllDorms()
+            } catch {
+                dormLoadError = error.localizedDescription
+            }
+            isDormLoading = false
+        }
+    }
+
     
     
     func loadUser() {

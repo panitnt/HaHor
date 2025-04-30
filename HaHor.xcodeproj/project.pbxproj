@@ -7,12 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7BE4C7722DC298C300A3DFA5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7BE4C7712DC298C300A3DFA5 /* GoogleService-Info.plist */; };
 		D05D63B42DB626A900335C4C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D05D63B32DB626A900335C4C /* FirebaseAnalytics */; };
 		D05D63B62DB626A900335C4C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D05D63B52DB626A900335C4C /* FirebaseAuth */; };
 		D05D64442DB793B500335C4C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D05D64432DB793B500335C4C /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7BE4C7712DC298C300A3DFA5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D05D638D2DB6261100335C4C /* HaHor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HaHor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -44,6 +46,7 @@
 				D05D638F2DB6261100335C4C /* HaHor */,
 				D05D64422DB793B500335C4C /* Frameworks */,
 				D05D638E2DB6261100335C4C /* Products */,
+				7BE4C7712DC298C300A3DFA5 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -132,6 +135,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BE4C7722DC298C300A3DFA5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
