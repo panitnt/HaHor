@@ -37,11 +37,17 @@ final class AuthnticationManager {
     func createUser(email: String, username: String, password: String) async throws -> AuthDataResultModel{
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
         
+        // update username
         let changeRequest = authDataResult.user.createProfileChangeRequest()
         changeRequest.displayName = username
         try await changeRequest.commitChanges()
         
-        return AuthDataResultModel(user: authDataResult.user)
+        let authDataResultModel = AuthDataResultModel(user: authDataResult.user)
+        
+        // add user into firestore database
+        try await UserManager.shared.createNewUser(auth: authDataResultModel)
+        
+        return authDataResultModel
     }
     
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel{

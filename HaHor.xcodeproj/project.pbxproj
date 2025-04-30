@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D05D63B42DB626A900335C4C /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = D05D63B32DB626A900335C4C /* FirebaseAnalytics */; };
 		D05D63B62DB626A900335C4C /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D05D63B52DB626A900335C4C /* FirebaseAuth */; };
+		D05D64442DB793B500335C4C /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = D05D64432DB793B500335C4C /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 			files = (
 				D05D63B42DB626A900335C4C /* FirebaseAnalytics in Frameworks */,
 				D05D63B62DB626A900335C4C /* FirebaseAuth in Frameworks */,
+				D05D64442DB793B500335C4C /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				D05D638F2DB6261100335C4C /* HaHor */,
+				D05D64422DB793B500335C4C /* Frameworks */,
 				D05D638E2DB6261100335C4C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +53,13 @@
 				D05D638D2DB6261100335C4C /* HaHor.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D05D64422DB793B500335C4C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,6 +84,7 @@
 			packageProductDependencies = (
 				D05D63B32DB626A900335C4C /* FirebaseAnalytics */,
 				D05D63B52DB626A900335C4C /* FirebaseAuth */,
+				D05D64432DB793B500335C4C /* FirebaseFirestore */,
 			);
 			productName = HaHor;
 			productReference = D05D638D2DB6261100335C4C /* HaHor.app */;
@@ -356,6 +367,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D05D63B22DB626A900335C4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		D05D64432DB793B500335C4C /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D05D63B22DB626A900335C4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

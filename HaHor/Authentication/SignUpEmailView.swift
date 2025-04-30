@@ -23,7 +23,10 @@ final class SignUpEmailViewModel: ObservableObject {
             guard password == cfpassword else {
                 throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Passwords do not match."])
             }
+        
         let _ = try await AuthnticationManager.shared.createUser(email: email, username: username, password: password)
+        
+        UserProfileViewModel.shared.loadUser()
         
 //        Task {
 //            do {

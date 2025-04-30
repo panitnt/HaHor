@@ -1,11 +1,26 @@
 import SwiftUI
 
+//
+//  DormListView.swift
+//  HaHor
+//
+//  Created by bell on 30/4/2568 BE.
+//
+
+import SwiftUI
+
 struct SortView: View {
     @State private var searchText: String = ""
     @State private var minPrice: String = ""
     @State private var maxPrice: String = ""
     @State private var selectedTab: Int = 1 // ชี้มาที่ Sort tab
+      
+    @State private var dorms: [Dorm] = []
+    @State private var isLoading = true
+    @State private var errorMessage: String?
     
+    @EnvironmentObject var viewModel: UserProfileViewModel
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
@@ -44,13 +59,33 @@ struct SortView: View {
                     .padding(.horizontal)
                     
                     // Cards
-                    VStack(spacing: 12) {
-                        CardView(imageName: "dorm1", title: "The Pixels at Kaset", rating: "5(2)", priceRange: "6,000-8,000", isFavorite: true)
-                        CardView(imageName: "dorm2", title: "Chapter One The Campus Kaset", rating: "5(2)", priceRange: "6,000-8,000", isFavorite: true)
-                        CardView(imageName: "dorm3", title: "Miti Cheva", rating: "4.8(49)", priceRange: "9,000-17,000", isFavorite: false)
+VStack (alignment: .leading, spacing: 16) {
+                    if isLoading {
+                        ProgressView("Loading Dorms...")
+                            .padding()
+                    } else if let errorMessage = errorMessage {
+                        Text("Error: \(errorMessage)")
+                            .foregroundColor(.red)
+                            .padding()
+                    } else {
+                        ForEach(dorms, id: \.id) { dorm in
+                            let isFavorite = viewModel.favoriteDorms.contains(where: { $0.id == dorm.id })
+
+                            CardView(imageName: "",
+                                     title: dorm.name,
+                                     rating: dorm.avg_review,
+                                     priceRange: dorm.price,
+                                     isFavorite: isFavorite)
+                            
+                        }
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 10)
+                }
+                  .padding(.horizontal)
+                  .padding(.top, 10)
+                .task {
+                    await fetchDorms()
+                }
+
                 }
             }
             .background(Color.white) // <<< background ScrollView ให้ขาว
@@ -61,8 +96,17 @@ struct SortView: View {
         .background(Color.white) // <<< background ทั้งหน้าขาว
         .edgesIgnoringSafeArea(.bottom)
     }
+    
+    private func fetchDorms() async {
+        do {
+            isLoading = true
+            errorMessage = nil
+            dorms = try await DormManager.shared.fetchAllDorms()
+            
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoading = false
+    }
 }
 
-#Preview {
-    SortView()
-}
