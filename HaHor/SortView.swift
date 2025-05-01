@@ -100,9 +100,9 @@ struct SortView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 10)
-                    .task {
-                        await viewModel.fetchDormsIfNeeded()
-                    }
+//                    .task {
+//                        await viewModel.fetchDormsIfNeeded()
+//                    }
                 }
             }
             .background(Color.white)

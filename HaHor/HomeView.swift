@@ -47,6 +47,10 @@ struct HomeView: View {
                 if !viewModel.isFavoriteDormsLoaded {
                     viewModel.loadUser()
                 }
+                
+                if !viewModel.isDormLoading{
+                    await viewModel.fetchDormsIfNeeded()
+                }
             }
         }
         .fullScreenCover(isPresented: $showSignInView){

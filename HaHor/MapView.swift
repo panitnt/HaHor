@@ -8,6 +8,10 @@
 import SwiftUI
 import MapKit
 
+//extension Dorm: Identifiable {
+//    var id: String { name } // You can use dorm.id if exists
+//}
+
 struct DormLocation: Identifiable {
     let id = UUID()
     let name: String
@@ -24,7 +28,6 @@ struct MapView: View {
     )
     
     @State private var selectedDorm: Dorm? = nil
-    @State private var isDetailPresented = false
     
     var dormLocations: [DormLocation] {
         viewModel.dorms.map {
@@ -42,7 +45,6 @@ struct MapView: View {
                 MapAnnotation(coordinate: location.coordinate) {
                     Button {
                         selectedDorm = location.originalDorm
-                        isDetailPresented = true
                     } label: {
                         Image(systemName: "mappin.circle.fill")
                             .font(.title)
@@ -52,13 +54,17 @@ struct MapView: View {
             }
             .ignoresSafeArea()
         }
-        .sheet(isPresented: $isDetailPresented) {
+        .sheet(isPresented: Binding<Bool>(
+            get: { selectedDorm != nil },
+            set: { if !$0 { selectedDorm = nil } }
+        )) {
             if let dorm = selectedDorm {
                 DormDetailView(dorm: dorm)
             }
         }
-        .task {
-            await viewModel.fetchDormsIfNeeded()
-        }
+
+//        .task {
+//            await viewModel.fetchDormsIfNeeded()
+//        }
     }
 }
