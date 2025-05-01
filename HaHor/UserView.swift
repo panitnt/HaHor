@@ -24,7 +24,7 @@ struct UserView: View {
     
     @EnvironmentObject var userVM: UserProfileViewModel
     
-//    @State private var favoriteDorms: [Dorm] = []
+    //    @State private var favoriteDorms: [Dorm] = []
     
     var body: some View {
         ZStack{
@@ -49,16 +49,28 @@ struct UserView: View {
                             .foregroundColor(.gray)
                     } else {
                         ForEach(userVM.favoriteDorms, id: \.id) { dorm in
-                            CardView(
-                                imageName: "dorm_placeholder", // Replace with real image logic
-                                title: dorm.name,
-                                rating: dorm.avg_review,
-                                priceRange: dorm.price,
-                                isFavorite: true
-                            )
+                            NavigationLink {
+                                DormDetailView(dorm: dorm)
+                            } label: {
+                                CardView(
+                                    imageName: "", // Add image handling here if available
+                                    title: dorm.name,
+                                    rating: dorm.avg_review,
+                                    priceRange: dorm.price,
+                                    isFavorite: true
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            //                            CardView(
+                            //                                imageName: "dorm_placeholder", // Replace with real image logic
+                            //                                title: dorm.name,
+                            //                                rating: dorm.avg_review,
+                            //                                priceRange: dorm.price,
+                            //                                isFavorite: true
+                            //                            )
                         }
                     }
-
+                    
                     
                     Divider()
                     
@@ -80,20 +92,20 @@ struct UserView: View {
                     }
                 }
                 .padding()
-//                .onAppear {
-//                    Task {
-//                        if let favoriteIDs = userVM.user?.favorite {
-//                            var dorms: [Dorm] = []
-//                            for id in favoriteIDs {
-//                                if let dorm = try? await DormManager.shared.fetchDorm(by: id) {
-//                                    dorms.append(dorm)
-//                                }
-//                            }
-//                            favoriteDorms = dorms
-//                        }
-//                    }
-//                }
-
+                //                .onAppear {
+                //                    Task {
+                //                        if let favoriteIDs = userVM.user?.favorite {
+                //                            var dorms: [Dorm] = []
+                //                            for id in favoriteIDs {
+                //                                if let dorm = try? await DormManager.shared.fetchDorm(by: id) {
+                //                                    dorms.append(dorm)
+                //                                }
+                //                            }
+                //                            favoriteDorms = dorms
+                //                        }
+                //                    }
+                //                }
+                
             } // end scrollView
         }
     }

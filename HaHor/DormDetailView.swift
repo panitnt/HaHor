@@ -74,10 +74,10 @@ struct DormDetailView: View {
             }
         }
         .sheet(isPresented: $isReviewPresented) {
+            HeaderView(title: "รีวิวทั้งหมดของ \(dorm.name)")
+                .padding(.bottom)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    HeaderView(title: "รีวิวทั้งหมดของ \(dorm.name)")
-                        .padding(.bottom)
 
                     ForEach(dorm.review, id: \.comment) { r in
                         VStack(alignment: .leading, spacing: 4) {
@@ -94,5 +94,8 @@ struct DormDetailView: View {
                 .padding()
             }
         }
+        .tint(.white) // Back button and title color
+        .toolbarBackground(Color(red: 177/255, green: 239/255, blue: 61/255), for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar) // Make sure background visible
     }
 }

@@ -15,7 +15,7 @@ struct SortView: View {
     @State private var selectedTab: Int = 1
     
     @EnvironmentObject var viewModel: UserProfileViewModel
-
+    
     var body: some View {
         VStack(spacing: 0) {
             // Scrollable Content
@@ -81,28 +81,39 @@ struct SortView: View {
                                 let matchesPrice = dormMax >= userMin && dormMin <= userMax
                                 
                                 return matchesSearch && matchesPrice
-                            
+                                
                             }
-
+                            
                             
                             ForEach(filteredDorms, id: \.id) { dorm in
                                 let isFavorite = viewModel.favoriteDorms.contains(where: { $0.id == dorm.id })
-                                
-                                CardView(
-                                    imageName: "", // Add image handling here if available
-                                    title: dorm.name,
-                                    rating: dorm.avg_review,
-                                    priceRange: dorm.price,
-                                    isFavorite: isFavorite
-                                )
+                                NavigationLink {
+                                    DormDetailView(dorm: dorm)
+                                } label: {
+                                    CardView(
+                                        imageName: "", // Add image handling here if available
+                                        title: dorm.name,
+                                        rating: dorm.avg_review,
+                                        priceRange: dorm.price,
+                                        isFavorite: isFavorite
+                                    )
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                //                                CardView(
+                                //                                    imageName: "", // Add image handling here if available
+                                //                                    title: dorm.name,
+                                //                                    rating: dorm.avg_review,
+                                //                                    priceRange: dorm.price,
+                                //                                    isFavorite: isFavorite
+                                //                                )
                             }
                         }
                     }
                     .padding(.horizontal)
                     .padding(.top, 10)
-//                    .task {
-//                        await viewModel.fetchDormsIfNeeded()
-//                    }
+                    //                    .task {
+                    //                        await viewModel.fetchDormsIfNeeded()
+                    //                    }
                 }
             }
             .background(Color.white)
