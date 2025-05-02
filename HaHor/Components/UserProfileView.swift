@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 @MainActor
 final class UserProfileViewModel: ObservableObject {
@@ -68,7 +69,33 @@ final class UserProfileViewModel: ObservableObject {
             }
         }
     }
+    
+    func addFavorite(dormId: String) {
+        guard let userId = self.user?.userId else { return }
+        if !favoriteDorms.contains(where: { $0.id == dormId }) {
+            // Add locally
+            if let dorm = dorms.first(where: { $0.id == dormId }) {
+                favoriteDorms.append(dorm)
+            }
+            // Update in Firestore
+            let favIds = favoriteDorms.map { $0.id }
+            Firestore.firestore().collection("users").document(userId).updateData([
+                "favorite": favIds
+            ])
+        }
+    }
+
+    func removeFavorite(dormId: String) {
+        guard let userId = self.user?.userId else { return }
+        favoriteDorms.removeAll { $0.id == dormId }
+        let favIds = favoriteDorms.map { $0.id }
+        Firestore.firestore().collection("users").document(userId).updateData([
+            "favorite": favIds
+        ])
+    }
+
 }
+
 
 
 struct UserProfileView: View {

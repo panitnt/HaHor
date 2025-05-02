@@ -88,24 +88,24 @@ struct SortView: View {
                             ForEach(filteredDorms, id: \.id) { dorm in
                                 let isFavorite = viewModel.favoriteDorms.contains(where: { $0.id == dorm.id })
                                 NavigationLink {
-                                    DormDetailView(dorm: dorm)
-                                } label: {
-                                    CardView(
-                                        imageName: "", // Add image handling here if available
-                                        title: dorm.name,
-                                        rating: dorm.avg_review,
-                                        priceRange: dorm.price,
-                                        isFavorite: isFavorite
-                                    )
-                                }
-                                .buttonStyle(PlainButtonStyle())
-                                //                                CardView(
-                                //                                    imageName: "", // Add image handling here if available
-                                //                                    title: dorm.name,
-                                //                                    rating: dorm.avg_review,
-                                //                                    priceRange: dorm.price,
-                                //                                    isFavorite: isFavorite
-                                //                                )
+                                        DormDetailView(dorm: dorm)
+                                    } label: {
+                                        CardView(
+                                            imageName: "",
+                                            title: dorm.name,
+                                            rating: dorm.avg_review,
+                                            priceRange: dorm.price,
+                                            isFavorite: isFavorite,
+                                            onFavoriteToggle: {
+                                                if isFavorite {
+                                                    viewModel.removeFavorite(dormId: dorm.id)
+                                                } else {
+                                                    viewModel.addFavorite(dormId: dorm.id)
+                                                }
+                                            }
+                                        )
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }

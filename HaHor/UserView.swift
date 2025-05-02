@@ -49,25 +49,23 @@ struct UserView: View {
                             .foregroundColor(.gray)
                     } else {
                         ForEach(userVM.favoriteDorms, id: \.id) { dorm in
+                            
                             NavigationLink {
                                 DormDetailView(dorm: dorm)
                             } label: {
                                 CardView(
-                                    imageName: "", // Add image handling here if available
+                                    imageName: "",
                                     title: dorm.name,
                                     rating: dorm.avg_review,
                                     priceRange: dorm.price,
-                                    isFavorite: true
+                                    isFavorite: true,
+                                    onFavoriteToggle: {
+                                        userVM.removeFavorite(dormId: dorm.id)
+                            
+                                    }
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
-                            //                            CardView(
-                            //                                imageName: "dorm_placeholder", // Replace with real image logic
-                            //                                title: dorm.name,
-                            //                                rating: dorm.avg_review,
-                            //                                priceRange: dorm.price,
-                            //                                isFavorite: true
-                            //                            )
                         }
                     }
                     
@@ -92,19 +90,6 @@ struct UserView: View {
                     }
                 }
                 .padding()
-                //                .onAppear {
-                //                    Task {
-                //                        if let favoriteIDs = userVM.user?.favorite {
-                //                            var dorms: [Dorm] = []
-                //                            for id in favoriteIDs {
-                //                                if let dorm = try? await DormManager.shared.fetchDorm(by: id) {
-                //                                    dorms.append(dorm)
-                //                                }
-                //                            }
-                //                            favoriteDorms = dorms
-                //                        }
-                //                    }
-                //                }
                 
             } // end scrollView
         }

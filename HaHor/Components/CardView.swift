@@ -14,6 +14,8 @@ struct CardView: View {
     var priceRange: String
     var isFavorite: Bool
     
+    var onFavoriteToggle: () -> Void // 👈 Add this
+    
     var body: some View {
         HStack(alignment: .top) {
             Image(imageName)
@@ -29,8 +31,13 @@ struct CardView: View {
                     Text(title)
                         .font(.headline)
                     Spacer()
-                    Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(.red)
+                    Button(action: {
+                        onFavoriteToggle()
+                    }) {
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
+                            .foregroundColor(.red)
+                    }
+                    .buttonStyle(PlainButtonStyle())
                 }
                 
                 HStack {
@@ -55,6 +62,6 @@ struct CardView: View {
     }
 }
 
-#Preview {
-    CardView(imageName: "HahorLogo", title: "Hahor", rating: "5.0", priceRange: "400-20000", isFavorite: false)
-}
+//#Preview {
+//    CardView(imageName: "HahorLogo", title: "Hahor", rating: "5.0", priceRange: "400-20000", isFavorite: false)
+//}

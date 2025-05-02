@@ -8,20 +8,30 @@ import SwiftUI
 struct DormDetailView: View {
     var dorm: Dorm
     @State private var isReviewPresented = false
-
+    @EnvironmentObject var viewModel: UserProfileViewModel
+    
+    private func toggleFavorite() {
+        if viewModel.favoriteDorms.contains(where: { $0.id == dorm.id }) {
+            viewModel.removeFavorite(dormId: dorm.id)
+        } else {
+            viewModel.addFavorite(dormId: dorm.id)
+        }
+    }
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Header
                 HeaderView(title: dorm.name)
-
+                
+                
                 // Image (placeholder)
                 Image("dorm_placeholder")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 200)
                     .clipped()
-
+                
                 // Facilities
                 VStack(alignment: .leading, spacing: 8) {
                     Text("สิ่งอำนวยความสะดวก")
@@ -38,7 +48,7 @@ struct DormDetailView: View {
                     }
                 }
                 .padding(.horizontal)
-
+                
                 // Contact Info
                 VStack(alignment: .leading, spacing: 8) {
                     Text("ติดต่อ")
@@ -49,12 +59,12 @@ struct DormDetailView: View {
                 }
                 .font(.subheadline)
                 .padding(.horizontal)
-
+                
                 // Price
                 Text("ราคา: ฿\(dorm.price)")
                     .font(.subheadline)
                     .padding(.horizontal)
-
+                
                 // Rating Summary
                 HStack {
                     Text("รีวิว: \(dorm.avg_review)")
@@ -78,7 +88,7 @@ struct DormDetailView: View {
                 .padding(.bottom)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-
+                    
                     ForEach(dorm.review, id: \.comment) { r in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(String(repeating: "⭐️", count: r.star))
@@ -94,8 +104,25 @@ struct DormDetailView: View {
                 .padding()
             }
         }
-        .tint(.white) // Back button and title color
+        .navigationTitle(dorm.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    toggleFavorite()
+                }) {
+                    Image(systemName: viewModel.favoriteDorms.contains(where: { $0.id == dorm.id }) ? "heart.fill" : "heart")
+                }
+            }
+        }
         .toolbarBackground(Color(red: 177/255, green: 239/255, blue: 61/255), for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar) // Make sure background visible
+        .toolbarBackground(.visible, for: .navigationBar)
+        
+        
+        
+        //        .tint(.white) // Back button and title color
+        //        .toolbarBackground(Color(red: 177/255, green: 239/255, blue: 61/255), for: .navigationBar)
+        //        .toolbarBackground(.visible, for: .navigationBar) // Make sure background visible
+        
     }
 }

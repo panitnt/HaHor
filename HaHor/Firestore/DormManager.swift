@@ -9,7 +9,7 @@ import Foundation
 import FirebaseFirestore
 import FirebaseCore
 
-struct Dorm {
+struct Dorm : Identifiable{
     var id: String = UUID().uuidString
     
     var name: String
