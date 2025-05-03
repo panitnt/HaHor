@@ -54,16 +54,16 @@ struct UserView: View {
                                 DormDetailView(dorm: dorm)
                             } label: {
                                 CardView(
-                                    imageName: "",
+                                    folderName: dorm.name,
                                     title: dorm.name,
                                     rating: dorm.avg_review,
                                     priceRange: dorm.price,
                                     isFavorite: true,
                                     onFavoriteToggle: {
                                         userVM.removeFavorite(dormId: dorm.id)
-                            
                                     }
                                 )
+
                             }
                             .buttonStyle(PlainButtonStyle())
                         }

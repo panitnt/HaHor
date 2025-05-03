@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "TheVilleKaset-sartCondominium.jpg",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "TheVilleKaset-sartCondominium 1.jpg",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "TheVilleKaset-sartCondominium 2.jpg",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

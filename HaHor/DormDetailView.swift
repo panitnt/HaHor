@@ -1,15 +1,17 @@
+//
 //  DormDetailView.swift
 //  HaHor
 //
 //  Created by Preme on 27/4/2568 BE.
 //
+
 import SwiftUI
 
 struct DormDetailView: View {
     var dorm: Dorm
     @State private var isReviewPresented = false
     @EnvironmentObject var viewModel: UserProfileViewModel
-    
+
     private func toggleFavorite() {
         if viewModel.favoriteDorms.contains(where: { $0.id == dorm.id }) {
             viewModel.removeFavorite(dormId: dorm.id)
@@ -17,21 +19,29 @@ struct DormDetailView: View {
             viewModel.addFavorite(dormId: dorm.id)
         }
     }
-    
+
+    private func sanitizeAssetName(from name: String) -> String {
+        return name
+            .replacingOccurrences(of: " ", with: "")
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Header
                 HeaderView(title: dorm.name)
-                
-                
-                // Image (placeholder)
-                Image("dorm_placeholder")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 200)
-                    .clipped()
-                
+
+                // Image from Assets.xcassets
+                let imageName = sanitizeAssetName(from: dorm.name)
+                HStack {
+                    Image(imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                        .clipped()
+                }
+                .frame(maxWidth: .infinity) 
+
                 // Facilities
                 VStack(alignment: .leading, spacing: 8) {
                     Text("สิ่งอำนวยความสะดวก")
@@ -48,7 +58,7 @@ struct DormDetailView: View {
                     }
                 }
                 .padding(.horizontal)
-                
+
                 // Contact Info
                 VStack(alignment: .leading, spacing: 8) {
                     Text("ติดต่อ")
@@ -59,12 +69,12 @@ struct DormDetailView: View {
                 }
                 .font(.subheadline)
                 .padding(.horizontal)
-                
+
                 // Price
                 Text("ราคา: ฿\(dorm.price)")
                     .font(.subheadline)
                     .padding(.horizontal)
-                
+
                 // Rating Summary
                 HStack {
                     Text("รีวิว: \(dorm.avg_review)")
@@ -88,7 +98,6 @@ struct DormDetailView: View {
                 .padding(.bottom)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    
                     ForEach(dorm.review, id: \.comment) { r in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(String(repeating: "⭐️", count: r.star))
@@ -117,12 +126,5 @@ struct DormDetailView: View {
         }
         .toolbarBackground(Color(red: 177/255, green: 239/255, blue: 61/255), for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        
-        
-        
-        //        .tint(.white) // Back button and title color
-        //        .toolbarBackground(Color(red: 177/255, green: 239/255, blue: 61/255), for: .navigationBar)
-        //        .toolbarBackground(.visible, for: .navigationBar) // Make sure background visible
-        
     }
 }
