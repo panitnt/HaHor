@@ -49,16 +49,16 @@ struct DormDetailView: View {
 
                 // Facilities
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("สิ่งอำนวยความสะดวก")
+                    Text("Amenities")
                         .font(.headline)
                     HStack {
                         if currentDorm.amenities.wifi { Label("Wifi", systemImage: "wifi") }
                         if currentDorm.amenities.fitness { Label("Fitness", systemImage: "figure.walk") }
-                        if currentDorm.amenities.washingmachine { Label("เครื่องซักผ้า", systemImage: "washer") }
+                        if currentDorm.amenities.washingmachine { Label("Washing Machine", systemImage: "washer") }
                     }
                     HStack {
-                        if currentDorm.amenities.clothesdryer { Label("เครื่องอบผ้า", systemImage: "wind") }
-                        if currentDorm.amenities.carpark { Label("ที่จอดรถ", systemImage: "car.fill") }
+                        if currentDorm.amenities.clothesdryer { Label("Clothes Dryer", systemImage: "wind") }
+                        if currentDorm.amenities.carpark { Label("Parking lot", systemImage: "car.fill") }
                         if currentDorm.amenities.autolockdoor { Label("Auto-lock", systemImage: "lock.fill") }
                     }
                 }
@@ -66,7 +66,7 @@ struct DormDetailView: View {
 
                 // Contact Info
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("ติดต่อ")
+                    Text("Contact Information")
                         .font(.headline)
                     Label(currentDorm.contact.phone, systemImage: "phone.fill")
                     Label(currentDorm.contact.email, systemImage: "envelope.fill")
@@ -76,20 +76,20 @@ struct DormDetailView: View {
                 .padding(.horizontal)
 
                 // Price
-                Text("ราคา: ฿\(currentDorm.price)")
-                    .font(.subheadline)
+                Text("Price: ฿\(currentDorm.price)")
+                    .font(.headline)
                     .padding(.horizontal)
 
                 // Rating Summary
                 HStack {
-                    Text("รีวิว: \(currentDorm.avg_review)")
+                    Text("Average Rating: \(String(format: "%.1f", currentDorm.avg_review)) ⭐️ (\(currentDorm.review_count) reviews)")
                         .font(.subheadline)
                     Spacer()
                     Button(action: {
                         isReviewPresented = true
                     }) {
                         HStack {
-                            Text("ดูรีวิว")
+                            Text("Read Review")
                             Image(systemName: "arrow.right")
                         }
                         .foregroundColor(.green)

@@ -86,28 +86,30 @@ struct SortView: View {
                             
                             
                             ForEach(filteredDorms, id: \.id) { dorm in
-                                let isFavorite = viewModel.favoriteDorms.contains(where: { $0.id == dorm.id })
-                                NavigationLink {
-                                    DormDetailView(dorm: dorm)
-                                } label: {
-                                    CardView(
-                                        imageName: dorm.name,
-                                        title: dorm.name,
-                                        rating: dorm.avg_review,
-                                        priceRange: dorm.price,
-                                        isFavorite: isFavorite,
-                                        onFavoriteToggle: {
-                                            if isFavorite {
-                                                viewModel.removeFavorite(dormId: dorm.id)
-                                            } else {
-                                                viewModel.addFavorite(dormId: dorm.id)
-                                            }
+                                let isFavorite = viewModel.favoriteDorms.contains { $0.id == dorm.id }
+                                let ratingText = String(format: "%.1f", dorm.avg_review)
+                                
+                                let card = CardView(
+                                    imageName: dorm.name,
+                                    title: dorm.name,
+                                    rating: ratingText,
+                                    priceRange: dorm.price,
+                                    isFavorite: isFavorite,
+                                    onFavoriteToggle: {
+                                        if isFavorite {
+                                            viewModel.removeFavorite(dormId: dorm.id)
+                                        } else {
+                                            viewModel.addFavorite(dormId: dorm.id)
                                         }
-                                    )
-                                    
+                                    }
+                                )
+                                
+                                NavigationLink(destination: DormDetailView(dorm: dorm)) {
+                                    card
                                 }
                                 .buttonStyle(PlainButtonStyle())
                             }
+
                         }
                     }
                     .padding(.horizontal)

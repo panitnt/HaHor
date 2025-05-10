@@ -16,7 +16,8 @@ struct Dorm : Identifiable{
     var lat: Double
     var lon: Double
     var price: String
-    var avg_review: String
+    var avg_review: Double
+    var review_count: Int
     var amenities: Amenities
     var contact: Contact
     var review: [Review]
@@ -83,17 +84,18 @@ final class DormManager {
                 timestamp: (r["timestamp"] as? Timestamp)?.dateValue() ?? Date()
             )
         }
-
         return Dorm(
             id: id,
             name: data["name"] as? String ?? "Unknown",
             lat: data["lat"] as? Double ?? 0.0,
             lon: data["lon"] as? Double ?? 0.0,
             price: data["price"] as? String ?? "",
-            avg_review: data["avg_review"] as? String ?? "",
+            avg_review: data["avg_review"] as? Double ?? 0.0,
+            review_count: data["review_count"] as? Int ?? 0,
             amenities: amenities,
             contact: contact,
             review: reviews
+        
         )
     }
     
@@ -143,7 +145,8 @@ final class DormManager {
                 lat: data["lat"] as? Double ?? 0.0,
                 lon: data["lon"] as? Double ?? 0.0,
                 price: data["price"] as? String ?? "",
-                avg_review: data["avg_review"] as? String ?? "",
+                avg_review: data["avg_review"] as? Double ?? 0.0,
+                review_count: data["review_count"] as? Int ?? 0,
                 amenities: amenities,
                 contact: contact,
                 review: reviews

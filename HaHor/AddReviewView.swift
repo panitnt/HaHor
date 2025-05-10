@@ -68,10 +68,8 @@ struct AddReviewView: View {
         guard !comment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         isSubmitting = true
 
-        // Safe unwrapping of user data
         let username = viewModel.user?.username ?? "Unknown"
 
-        // Build review dictionary (safe to pass across await in Swift 6)
         let reviewEntry: [String: Any] = [
             "star": star,
             "comment": comment,
@@ -82,9 +80,29 @@ struct AddReviewView: View {
 
         do {
             let dormRef = Firestore.firestore().collection("dorm").document(dorm.id)
+
+            // 1. Add the new review
             try await dormRef.updateData([
                 "review": FieldValue.arrayUnion([reviewEntry])
             ])
+
+            // 2. Get updated review list
+            let snapshot = try await dormRef.getDocument()
+            if let data = snapshot.data(),
+               let reviews = data["review"] as? [[String: Any]] {
+
+                // 3. Recalculate average & count
+                let totalStars = reviews.compactMap { $0["star"] as? Int }.reduce(0, +)
+                let count = reviews.count
+                let avg = Double(totalStars) / Double(count)
+
+                // 4. Update avg_review and review_count
+                try await dormRef.updateData([
+                    "avg_review": Double(round(avg * 100) / 100), // round to 2 decimal places
+                    "review_count": count
+                ])
+            }
+
             isSubmitting = false
             dismiss()
         } catch {
@@ -92,4 +110,5 @@ struct AddReviewView: View {
             isSubmitting = false
         }
     }
+
 }

@@ -56,7 +56,7 @@ struct UserView: View {
                                 CardView(
                                     imageName: dorm.name,
                                     title: dorm.name,
-                                    rating: dorm.avg_review,
+                                    rating: String(format: "%.1f", dorm.avg_review),
                                     priceRange: dorm.price,
                                     isFavorite: true,
                                     onFavoriteToggle: {
