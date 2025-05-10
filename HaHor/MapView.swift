@@ -21,14 +21,14 @@ struct DormLocation: Identifiable {
 
 struct MapView: View {
     @EnvironmentObject var viewModel: UserProfileViewModel
-    
+
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 13.8425, longitude: 100.5685),
         span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
     )
-    
+
     @State private var selectedDorm: Dorm? = nil
-    
+
     var dormLocations: [DormLocation] {
         viewModel.dorms.map {
             DormLocation(
@@ -38,33 +38,24 @@ struct MapView: View {
             )
         }
     }
-    
+
     var body: some View {
-        ZStack {
-            Map(coordinateRegion: $region, annotationItems: dormLocations) { location in
-                MapAnnotation(coordinate: location.coordinate) {
-                    Button {
-                        selectedDorm = location.originalDorm
-                    } label: {
-                        Image(systemName: "mappin.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.red)
+        NavigationStack {
+            ZStack {
+                Map(coordinateRegion: $region, annotationItems: dormLocations) { location in
+                    MapAnnotation(coordinate: location.coordinate) {
+                        NavigationLink(
+                            destination: DormDetailView(dorm: location.originalDorm)
+                        ) {
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.title)
+                                .foregroundColor(.red)
+                        }
                     }
                 }
-            }
-            .ignoresSafeArea()
-        }
-        .sheet(isPresented: Binding<Bool>(
-            get: { selectedDorm != nil },
-            set: { if !$0 { selectedDorm = nil } }
-        )) {
-            if let dorm = selectedDorm {
-                DormDetailView(dorm: dorm)
+                .ignoresSafeArea()
             }
         }
-
-//        .task {
-//            await viewModel.fetchDormsIfNeeded()
-//        }
     }
 }
+

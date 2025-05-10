@@ -54,7 +54,7 @@ struct UserView: View {
                                 DormDetailView(dorm: dorm)
                             } label: {
                                 CardView(
-                                    folderName: dorm.name,
+                                    imageName: dorm.name,
                                     title: dorm.name,
                                     rating: dorm.avg_review,
                                     priceRange: dorm.price,

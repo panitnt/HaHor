@@ -40,7 +40,11 @@ struct Contact{
 struct Review {
     var comment: String
     var star: Int
+    var by: String
+    var displayAsAnonymous: Bool
+    var timestamp: Date?
 }
+
 
 
 final class DormManager {
@@ -73,7 +77,10 @@ final class DormManager {
         let reviews: [Review] = reviewList.map { r in
             Review(
                 comment: r["comment"] as? String ?? "",
-                star: r["star"] as? Int ?? 0
+                star: r["star"] as? Int ?? 0,
+                by: r["by"] as? String ?? "Unknown",
+                displayAsAnonymous: r["displayAsAnonymous"] as? Bool ?? false,
+                timestamp: (r["timestamp"] as? Timestamp)?.dateValue() ?? Date()
             )
         }
 
@@ -119,9 +126,14 @@ final class DormManager {
             
             let reviewList = data["review"] as? [[String: Any]] ?? []
             let reviews: [Review] = reviewList.map {
-                Review(
+            let timestamp = ($0["timestamp"] as? Timestamp)?.dateValue() ?? Date.distantPast
+
+            return Review(
                     comment: $0["comment"] as? String ?? "",
-                    star: $0["star"] as? Int ?? 0
+                    star: $0["star"] as? Int ?? 0,
+                    by: $0["by"] as? String ?? "Unknown",
+                    displayAsAnonymous: $0["displayAsAnonymous"] as? Bool ?? false,
+                    timestamp: timestamp
                 )
             }
 

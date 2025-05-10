@@ -88,25 +88,25 @@ struct SortView: View {
                             ForEach(filteredDorms, id: \.id) { dorm in
                                 let isFavorite = viewModel.favoriteDorms.contains(where: { $0.id == dorm.id })
                                 NavigationLink {
-                                        DormDetailView(dorm: dorm)
-                                    } label: {
-                                        CardView(
-                                            folderName: dorm.name,
-                                            title: dorm.name,
-                                            rating: dorm.avg_review,
-                                            priceRange: dorm.price,
-                                            isFavorite: isFavorite,
-                                            onFavoriteToggle: {
-                                                if isFavorite {
-                                                    viewModel.removeFavorite(dormId: dorm.id)
-                                                } else {
-                                                    viewModel.addFavorite(dormId: dorm.id)
-                                                }
+                                    DormDetailView(dorm: dorm)
+                                } label: {
+                                    CardView(
+                                        imageName: dorm.name,
+                                        title: dorm.name,
+                                        rating: dorm.avg_review,
+                                        priceRange: dorm.price,
+                                        isFavorite: isFavorite,
+                                        onFavoriteToggle: {
+                                            if isFavorite {
+                                                viewModel.removeFavorite(dormId: dorm.id)
+                                            } else {
+                                                viewModel.addFavorite(dormId: dorm.id)
                                             }
-                                        )
-
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
+                                        }
+                                    )
+                                    
+                                }
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }

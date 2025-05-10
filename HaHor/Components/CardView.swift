@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CardView: View {
-    var folderName: String
+    var imageName: String
     var title: String
     var rating: String
     var priceRange: String
@@ -23,7 +23,7 @@ struct CardView: View {
 
     var body: some View {
         HStack(alignment: .top) {
-            Image(sanitizeAssetName(from: folderName))
+            Image(sanitizeAssetName(from: imageName))
                 .resizable()
                 .frame(width: 100, height: 80)
                 .cornerRadius(8)

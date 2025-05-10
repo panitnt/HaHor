@@ -8,31 +8,36 @@
 import SwiftUI
 
 struct DormDetailView: View {
-    var dorm: Dorm
+    @State private var currentDorm: Dorm
     @State private var isReviewPresented = false
+    @State private var isAddReviewPresented = false
+
     @EnvironmentObject var viewModel: UserProfileViewModel
 
+    init(dorm: Dorm) {
+        _currentDorm = State(initialValue: dorm)
+    }
+
     private func toggleFavorite() {
-        if viewModel.favoriteDorms.contains(where: { $0.id == dorm.id }) {
-            viewModel.removeFavorite(dormId: dorm.id)
+        if viewModel.favoriteDorms.contains(where: { $0.id == currentDorm.id }) {
+            viewModel.removeFavorite(dormId: currentDorm.id)
         } else {
-            viewModel.addFavorite(dormId: dorm.id)
+            viewModel.addFavorite(dormId: currentDorm.id)
         }
     }
 
     private func sanitizeAssetName(from name: String) -> String {
-        return name
-            .replacingOccurrences(of: " ", with: "")
+        name.replacingOccurrences(of: " ", with: "")
     }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // Header
-                HeaderView(title: dorm.name)
+                HeaderView(title: currentDorm.name)
 
                 // Image from Assets.xcassets
-                let imageName = sanitizeAssetName(from: dorm.name)
+                let imageName = sanitizeAssetName(from: currentDorm.name)
                 HStack {
                     Image(imageName)
                         .resizable()
@@ -40,21 +45,21 @@ struct DormDetailView: View {
                         .frame(height: 200)
                         .clipped()
                 }
-                .frame(maxWidth: .infinity) 
+                .frame(maxWidth: .infinity)
 
                 // Facilities
                 VStack(alignment: .leading, spacing: 8) {
                     Text("สิ่งอำนวยความสะดวก")
                         .font(.headline)
                     HStack {
-                        if dorm.amenities.wifi { Label("Wifi", systemImage: "wifi") }
-                        if dorm.amenities.fitness { Label("Fitness", systemImage: "figure.walk") }
-                        if dorm.amenities.washingmachine { Label("เครื่องซักผ้า", systemImage: "washer") }
+                        if currentDorm.amenities.wifi { Label("Wifi", systemImage: "wifi") }
+                        if currentDorm.amenities.fitness { Label("Fitness", systemImage: "figure.walk") }
+                        if currentDorm.amenities.washingmachine { Label("เครื่องซักผ้า", systemImage: "washer") }
                     }
                     HStack {
-                        if dorm.amenities.clothesdryer { Label("เครื่องอบผ้า", systemImage: "wind") }
-                        if dorm.amenities.carpark { Label("ที่จอดรถ", systemImage: "car.fill") }
-                        if dorm.amenities.autolockdoor { Label("Auto-lock", systemImage: "lock.fill") }
+                        if currentDorm.amenities.clothesdryer { Label("เครื่องอบผ้า", systemImage: "wind") }
+                        if currentDorm.amenities.carpark { Label("ที่จอดรถ", systemImage: "car.fill") }
+                        if currentDorm.amenities.autolockdoor { Label("Auto-lock", systemImage: "lock.fill") }
                     }
                 }
                 .padding(.horizontal)
@@ -63,21 +68,21 @@ struct DormDetailView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("ติดต่อ")
                         .font(.headline)
-                    Label(dorm.contact.phone, systemImage: "phone.fill")
-                    Label(dorm.contact.email, systemImage: "envelope.fill")
-                    Label(dorm.contact.address, systemImage: "location.fill")
+                    Label(currentDorm.contact.phone, systemImage: "phone.fill")
+                    Label(currentDorm.contact.email, systemImage: "envelope.fill")
+                    Label(currentDorm.contact.address, systemImage: "location.fill")
                 }
                 .font(.subheadline)
                 .padding(.horizontal)
 
                 // Price
-                Text("ราคา: ฿\(dorm.price)")
+                Text("ราคา: ฿\(currentDorm.price)")
                     .font(.subheadline)
                     .padding(.horizontal)
 
                 // Rating Summary
                 HStack {
-                    Text("รีวิว: \(dorm.avg_review)")
+                    Text("รีวิว: \(currentDorm.avg_review)")
                         .font(.subheadline)
                     Spacer()
                     Button(action: {
@@ -94,33 +99,41 @@ struct DormDetailView: View {
             }
         }
         .sheet(isPresented: $isReviewPresented) {
-            HeaderView(title: "รีวิวทั้งหมดของ \(dorm.name)")
+            HeaderView(title: "รีวิวทั้งหมดของ \(currentDorm.name)")
                 .padding(.bottom)
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    ForEach(dorm.review, id: \.comment) { r in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(String(repeating: "⭐️", count: r.star))
-                                .font(.headline)
-                            Text(r.comment)
-                                .font(.subheadline)
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(currentDorm.review, id: \.comment) { r in
+                        ReviewCard(review: r)
                     }
                 }
                 .padding()
             }
+
         }
-        .navigationTitle(dorm.name)
+        .sheet(isPresented: $isAddReviewPresented, onDismiss: {
+            Task {
+                if let updatedDorm = try? await DormManager.shared.fetchDorm(by: currentDorm.id) {
+                    currentDorm = updatedDorm
+                }
+            }
+        }) {
+            AddReviewView(dorm: currentDorm)
+        }
+        .navigationTitle(currentDorm.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action: {
                     toggleFavorite()
                 }) {
-                    Image(systemName: viewModel.favoriteDorms.contains(where: { $0.id == dorm.id }) ? "heart.fill" : "heart")
+                    Image(systemName: viewModel.favoriteDorms.contains(where: { $0.id == currentDorm.id }) ? "heart.fill" : "heart")
+                }
+
+                Button(action: {
+                    isAddReviewPresented = true
+                }) {
+                    Image(systemName: "plus")
                 }
             }
         }

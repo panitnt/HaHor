@@ -43,7 +43,6 @@ struct HomeView: View {
                 self.showSignInView = authUser == nil
                 
                 
-                // ✅ Load user and favorites once here
                 if !viewModel.isFavoriteDormsLoaded {
                     viewModel.loadUser()
                 }
