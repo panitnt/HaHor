@@ -22,11 +22,11 @@ struct AuthenticationView: View {
             Text("Please Signin/Login before using HaHor")
                 .foregroundColor(.black)
                 .frame(height:55)
-                        
+            
             NavigationLink{
-                SignInEmailView(showSignInView: $showSignInView)
+                SignUpEmailView(showSignInView: $showSignInView)
             }label: {
-                Text("Sign In with Email")
+                Text("Sign Up")
                     .font(.headline)
                     .foregroundColor(Color(UIColor.white))
                     .frame(height:55)
@@ -34,10 +34,11 @@ struct AuthenticationView: View {
                     .background(Color(red: 177/255, green: 239/255, blue: 61/255))
                     .cornerRadius(10)
             }
+                        
             NavigationLink{
-                SignUpEmailView(showSignInView: $showSignInView)
+                SignInEmailView(showSignInView: $showSignInView)
             }label: {
-                Text("Sign Up (Already have account)")
+                Text("Sign In (Already have account)")
                     .font(.headline)
                     .frame(height:55)
                     .frame(maxWidth: .infinity)
