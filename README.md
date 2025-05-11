@@ -18,13 +18,12 @@ Feature
     ```
     cd HaHor
     ```
-3. You Need to have a firebase with (for iOS application)
+3. You need to have a Firebase with (for iOS application)
    - Authentication
    - Database
-4. Clone this re
-5. Put your `GoogleService-Info.plist` into this project
-6. Clean Build Folder (Product > Clean Build Folder)
-7. Build (Product > Build)
+4. Put your `GoogleService-Info.plist` into this project
+5. Clean Build Folder (Product > Clean Build Folder)
+6. Build (Product > Build)
 
 ## How to insert data into Firebase
 1. You Need to have a firestore with collection name `users` and `dorm`
