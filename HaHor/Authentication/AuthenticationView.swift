@@ -13,28 +13,39 @@ struct AuthenticationView: View {
     
     var body: some View {
         VStack{
+            Image("HahorLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 180, height: 100)
+                .padding(40)
+            
+            Text("Please Signin/Login before using HaHor")
+                .foregroundColor(.black)
+                .frame(height:55)
+                        
             NavigationLink{
                 SignInEmailView(showSignInView: $showSignInView)
             }label: {
                 Text("Sign In with Email")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(UIColor.white))
                     .frame(height:55)
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .background(Color(red: 177/255, green: 239/255, blue: 61/255))
                     .cornerRadius(10)
             }
             NavigationLink{
                 SignUpEmailView(showSignInView: $showSignInView)
             }label: {
-                Text("Sign Up with Email")
+                Text("Sign Up (Already have account)")
                     .font(.headline)
-                    .foregroundColor(.white)
                     .frame(height:55)
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .foregroundColor(Color(UIColor.black))
+                    .background(Color(UIColor.systemGray6))
                     .cornerRadius(10)
             }
+
             Spacer()
         }
         .padding()
