@@ -29,15 +29,34 @@ struct MapView: View {
 
     @State private var selectedDorm: Dorm? = nil
 
+//    var dormLocations: [DormLocation] {
+//        viewModel.dorms.map {
+//            DormLocation(
+//                name: $0.name,
+//                coordinate: CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon),
+//                originalDorm: $0
+//            )
+//        }
+//    }
     var dormLocations: [DormLocation] {
-        viewModel.dorms.map {
-            DormLocation(
-                name: $0.name,
-                coordinate: CLLocationCoordinate2D(latitude: $0.lat, longitude: $0.lon),
-                originalDorm: $0
+        viewModel.dorms.compactMap { dorm in
+            let lat = dorm.lat
+            let lon = dorm.lon
+
+            // Validate coordinates
+            guard lat.isFinite, lon.isFinite else {
+                print("Invalid coordinate for dorm: \(dorm.name) → lat: \(lat), lon: \(lon)")
+                return nil
+            }
+
+            return DormLocation(
+                name: dorm.name,
+                coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                originalDorm: dorm
             )
         }
     }
+
 
     var body: some View {
         NavigationStack {

@@ -35,7 +35,7 @@ struct HomeView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     BottomNavBarView(selectedTab: $selectedTab)
                 }
-                //                .edgesIgnoringSafeArea(.bottom)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             }
         }.onAppear {
             Task {

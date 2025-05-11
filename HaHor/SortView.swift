@@ -26,15 +26,29 @@ struct SortView: View {
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
+                        
                         TextField("Search here", text: $searchText)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
+                        
+                        // Clear Button
+                        if !searchText.isEmpty || !minPrice.isEmpty || !maxPrice.isEmpty {
+                            Button(action: {
+                                searchText = ""
+                                minPrice = ""
+                                maxPrice = ""
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.gray)
+                            }
+                        }
                     }
                     .padding()
                     .background(Color(.systemGray6))
                     .cornerRadius(10)
                     .padding(.horizontal)
                     .padding(.top, 8)
+
                     
                     // Enter price range
                     HStack {
