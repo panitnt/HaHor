@@ -13,6 +13,7 @@ final class SignUpEmailViewModel: ObservableObject {
     @Published var username = ""
     @Published var password = ""
     @Published var cfpassword = ""
+    @Published var isLoading = false
 
     @Published var signInError: String? = nil
     
@@ -23,6 +24,9 @@ final class SignUpEmailViewModel: ObservableObject {
             guard password == cfpassword else {
                 throw NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Passwords do not match."])
             }
+        
+        isLoading = true
+        defer { isLoading = false } // ensure it resets even if error
         
         let _ = try await AuthnticationManager.shared.createUser(email: email, username: username, password: password)
         
@@ -53,88 +57,86 @@ struct SignUpEmailView: View {
     
     
     var body: some View {
-        VStack(spacing: 20) {
-            // Logo
-            Image("HahorLogo")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 180, height: 100)
-                .padding(.top, 60)
-            
-            // Title
-            Text("Sign Up")
-                .font(.title)
-                .bold()
-            
-            Text("Enter your email and password")
-                .font(.subheadline)
-                .foregroundColor(.gray)
-            
-            // TextFields
-            VStack(spacing: 16) {
-                TextField("Email", text: $viewModel.email)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(10)
-                    .keyboardType(.emailAddress)
-                    .autocapitalization(.none)
+        ZStack {
+            VStack(spacing: 20) {
+                // Logo
+                Image("HahorLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 180, height: 100)
+                    .padding(.top, 60)
                 
-                TextField("Username", text: $viewModel.username)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(10)
-                    .autocapitalization(.none)
-                
-                SecureField("Password", text: $viewModel.password)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(10)
-                
-                SecureField("Confirm Password", text: $viewModel.cfpassword)
-                    .padding()
-                    .background(Color(UIColor.systemGray6))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal, 32)
-            
-            // Login Button
-            Button(action: {
-                Task{
-                    do{
-                        try await viewModel.signUp()
-                        showSignInView = false
-                        return
-                    } catch{
-                        self.showAlert = true
-                        self.errorMessage = error.localizedDescription
-                        return
-                    }
-                }
-                
-            }) {
+                // Title
                 Text("Sign Up")
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.black)
-                    .cornerRadius(10)
+                    .font(.title)
+                    .bold()
+                
+                Text("Enter your email and password")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                
+                // TextFields
+                VStack(spacing: 16) {
+                    TextField("Email", text: $viewModel.email)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(10)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
+                    
+                    TextField("Username", text: $viewModel.username)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(10)
+                        .autocapitalization(.none)
+                    
+                    SecureField("Password", text: $viewModel.password)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(10)
+                    
+                    SecureField("Confirm Password", text: $viewModel.cfpassword)
+                        .padding()
+                        .background(Color(UIColor.systemGray6))
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 32)
+                
+                // Sign Up Button
+                Button(action: {
+                    Task {
+                        do {
+                            try await viewModel.signUp()
+                            showSignInView = false
+                        } catch {
+                            self.errorMessage = error.localizedDescription
+                            self.showAlert = true
+                        }
+                    }
+                }) {
+                    Text("Sign Up")
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.black)
+                        .cornerRadius(10)
+                }
+                .padding(.horizontal, 32)
+                .padding(.top, 10)
+                
+                Spacer()
             }
-            .padding(.horizontal, 32)
-            .padding(.top, 10)
+            .disabled(viewModel.isLoading)
+            .blur(radius: viewModel.isLoading ? 3 : 0)
             
-            // Sign Up Text
-//            HStack {
-//                Text("Already have an account?")
-//                Button(action: {
-//                    // Navigate to sign up
-//                }) {
-//                    Text("sign in")
-//                        .underline()
-//                }
-//            }
-//            .font(.footnote)
-//            //            .padding(.bottom, 20)
-            Spacer()
+            // Loading Indicator
+            if viewModel.isLoading {
+                ProgressView("Creating Account…")
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .cornerRadius(12)
+                    .shadow(radius: 10)
+            }
         }
         .navigationTitle("Sign Up new account")
         .onReceive(viewModel.$signInError) { error in
@@ -146,8 +148,7 @@ struct SignUpEmailView: View {
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Sign Up Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
         }
-        //        .ignoresSafeArea(edges: .top)
-    } // end view
+    }
 }
 
 
