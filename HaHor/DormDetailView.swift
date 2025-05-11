@@ -99,18 +99,24 @@ struct DormDetailView: View {
             }
         }
         .sheet(isPresented: $isReviewPresented) {
-            HeaderView(title: "รีวิวทั้งหมดของ \(currentDorm.name)")
-                .padding(.bottom)
-            ScrollView {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(currentDorm.review, id: \.comment) { r in
-                        ReviewCard(review: r)
-                    }
-                }
-                .padding()
-            }
+            VStack(spacing: 0) {
+                HeaderView(title: "\(currentDorm.name)'s Reviews")
+                    .padding(.bottom)
 
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(currentDorm.review, id: \.comment) { r in
+                            ReviewCard(review: r)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .padding(.horizontal, 16) // Just outer padding
+                    .padding(.bottom)
+                }
+            }
         }
+
+
         .sheet(isPresented: $isAddReviewPresented, onDismiss: {
             Task {
                 if let updatedDorm = try? await DormManager.shared.fetchDorm(by: currentDorm.id) {
@@ -141,3 +147,4 @@ struct DormDetailView: View {
         .toolbarBackground(.visible, for: .navigationBar)
     }
 }
+

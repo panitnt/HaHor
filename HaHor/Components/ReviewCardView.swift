@@ -4,39 +4,38 @@
 //
 //  Created by bell on 11/5/2568 BE.
 //
-
 import SwiftUI
 
 struct ReviewCard: View {
     let review: Review
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 8) {
+            // Star Rating
             Text(String(repeating: "⭐️", count: review.star))
                 .font(.headline)
             
+            // Comment
             Text(review.comment)
                 .font(.subheadline)
+                .fixedSize(horizontal: false, vertical: true)
             
-            HStack(spacing: 8) {
-                
+            // Date and User
+            HStack {
                 if let ts = review.timestamp {
                     Text(ts, style: .date)
-                        .font(.caption)
-                        .foregroundColor(.gray)
                 } else {
                     Text("none")
-                        .font(.caption)
-                        .foregroundColor(.gray)
                 }
-                
+                Spacer()
                 Text("by \(review.by)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
             }
+            .font(.caption)
+            .foregroundColor(.gray)
         }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(10)
+        .padding(12) 
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
